@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 /**
  * 帖子VO
  */
-public class PostVO {
+public class PostVo {
     
     private Long id;
     private String title;

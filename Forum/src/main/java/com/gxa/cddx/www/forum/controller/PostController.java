@@ -4,7 +4,7 @@ import com.gxa.cddx.www.forum.annotation.RequireAuth;
 import com.gxa.cddx.www.forum.dto.PostDTO;
 import com.gxa.cddx.www.forum.service.PostService;
 import com.gxa.cddx.www.forum.vo.PageVO;
-import com.gxa.cddx.www.forum.vo.PostVO;
+import com.gxa.cddx.www.forum.vo.PostVo;
 import com.gxa.cddx.www.forum.vo.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +25,9 @@ public class PostController {
      */
     @RequireAuth
     @PostMapping
-    public Result<PostVO> createPost(@RequestBody PostDTO postDTO, HttpServletRequest request) {
+    public Result<PostVo> createPost(@RequestBody PostDTO postDTO, HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        PostVO postVO = postService.createPost(postDTO, userId);
+        PostVo postVO = postService.createPost(postDTO, userId);
         return Result.success("发帖成功", postVO);
     }
     
@@ -35,8 +35,8 @@ public class PostController {
      * 获取帖子详情
      */
     @GetMapping("/{postId}")
-    public Result<PostVO> getPostById(@PathVariable Long postId) {
-        PostVO postVO = postService.getPostById(postId);
+    public Result<PostVo> getPostById(@PathVariable Long postId) {
+        PostVo postVO = postService.getPostById(postId);
         return Result.success(postVO);
     }
     
@@ -44,10 +44,10 @@ public class PostController {
      * 分页查询帖子列表
      */
     @GetMapping("/list")
-    public Result<PageVO<PostVO>> getPostList(
+    public Result<PageVO<PostVo>> getPostList(
             @RequestParam(required = false) Integer pageNum,
             @RequestParam(required = false) Integer pageSize) {
-        PageVO<PostVO> pageVO = postService.getPostList(pageNum, pageSize);
+        PageVO<PostVo> pageVO = postService.getPostList(pageNum, pageSize);
         return Result.success(pageVO);
     }
     
@@ -55,11 +55,11 @@ public class PostController {
      * 根据板块ID分页查询帖子
      */
     @GetMapping("/category/{categoryId}")
-    public Result<PageVO<PostVO>> getPostListByCategory(
+    public Result<PageVO<PostVo>> getPostListByCategory(
             @PathVariable Long categoryId,
             @RequestParam(required = false) Integer pageNum,
             @RequestParam(required = false) Integer pageSize) {
-        PageVO<PostVO> pageVO = postService.getPostListByCategory(categoryId, pageNum, pageSize);
+        PageVO<PostVo> pageVO = postService.getPostListByCategory(categoryId, pageNum, pageSize);
         return Result.success(pageVO);
     }
     
@@ -67,11 +67,11 @@ public class PostController {
      * 根据作者ID分页查询帖子
      */
     @GetMapping("/author/{authorId}")
-    public Result<PageVO<PostVO>> getPostListByAuthor(
+    public Result<PageVO<PostVo>> getPostListByAuthor(
             @PathVariable Long authorId,
             @RequestParam(required = false) Integer pageNum,
             @RequestParam(required = false) Integer pageSize) {
-        PageVO<PostVO> pageVO = postService.getPostListByAuthor(authorId, pageNum, pageSize);
+        PageVO<PostVo> pageVO = postService.getPostListByAuthor(authorId, pageNum, pageSize);
         return Result.success(pageVO);
     }
     
@@ -80,12 +80,12 @@ public class PostController {
      */
     @RequireAuth
     @PutMapping("/{postId}")
-    public Result<PostVO> updatePost(
+    public Result<PostVo> updatePost(
             @PathVariable Long postId,
             @RequestBody PostDTO postDTO,
             HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        PostVO postVO = postService.updatePost(postId, postDTO, userId);
+        PostVo postVO = postService.updatePost(postId, postDTO, userId);
         return Result.success("更新成功", postVO);
     }
     
@@ -105,11 +105,11 @@ public class PostController {
      */
     @RequireAuth(admin = true)
     @GetMapping("/admin/list")
-    public Result<PageVO<PostVO>> getAllPostsForAdmin(
+    public Result<PageVO<PostVo>> getAllPostsForAdmin(
             @RequestParam(required = false) Integer pageNum,
             @RequestParam(required = false) Integer pageSize,
             @RequestParam(required = false) Integer status) {
-        PageVO<PostVO> pageVO = postService.getAllPostsForAdmin(pageNum, pageSize, status);
+        PageVO<PostVo> pageVO = postService.getAllPostsForAdmin(pageNum, pageSize, status);
         return Result.success(pageVO);
     }
     

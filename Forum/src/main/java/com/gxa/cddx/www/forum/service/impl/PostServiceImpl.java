@@ -16,7 +16,7 @@ import com.gxa.cddx.www.forum.service.AIService;
 import com.gxa.cddx.www.forum.service.PostService;
 import com.gxa.cddx.www.forum.service.SensitiveWordService;
 import com.gxa.cddx.www.forum.vo.PageVO;
-import com.gxa.cddx.www.forum.vo.PostVO;
+import com.gxa.cddx.www.forum.vo.PostVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class PostServiceImpl implements PostService {
     
     @Override
     @Transactional
-    public PostVO createPost(PostDTO postDTO, Long authorId) {
+    public PostVo createPost(PostDTO postDTO, Long authorId) {
         // 检查用户是否被禁言
         User author = userRepository.findById(authorId)
             .orElseThrow(() -> new BusinessException(ResultCode.USER_NOT_FOUND, "用户不存在"));
@@ -179,7 +179,7 @@ public class PostServiceImpl implements PostService {
     
     @Override
     @Transactional
-    public PostVO getPostById(Long postId) {
+    public PostVo getPostById(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new BusinessException(ResultCode.POST_NOT_FOUND, "帖子不存在"));
         
@@ -191,7 +191,7 @@ public class PostServiceImpl implements PostService {
     }
     
     @Override
-    public PageVO<PostVO> getPostList(Integer pageNum, Integer pageSize) {
+    public PageVO<PostVo> getPostList(Integer pageNum, Integer pageSize) {
         pageNum = pageNum == null ? CommonConstant.DEFAULT_PAGE_NUM : pageNum;
         pageSize = pageSize == null ? CommonConstant.DEFAULT_PAGE_SIZE : pageSize;
         
@@ -203,7 +203,7 @@ public class PostServiceImpl implements PostService {
     }
     
     @Override
-    public PageVO<PostVO> getPostListByCategory(Long categoryId, Integer pageNum, Integer pageSize) {
+    public PageVO<PostVo> getPostListByCategory(Long categoryId, Integer pageNum, Integer pageSize) {
         pageNum = pageNum == null ? CommonConstant.DEFAULT_PAGE_NUM : pageNum;
         pageSize = pageSize == null ? CommonConstant.DEFAULT_PAGE_SIZE : pageSize;
         
@@ -215,7 +215,7 @@ public class PostServiceImpl implements PostService {
     }
     
     @Override
-    public PageVO<PostVO> getPostListByAuthor(Long authorId, Integer pageNum, Integer pageSize) {
+    public PageVO<PostVo> getPostListByAuthor(Long authorId, Integer pageNum, Integer pageSize) {
         pageNum = pageNum == null ? CommonConstant.DEFAULT_PAGE_NUM : pageNum;
         pageSize = pageSize == null ? CommonConstant.DEFAULT_PAGE_SIZE : pageSize;
         
@@ -228,7 +228,7 @@ public class PostServiceImpl implements PostService {
     
     @Override
     @Transactional
-    public PostVO updatePost(Long postId, PostDTO postDTO, Long userId) {
+    public PostVo updatePost(Long postId, PostDTO postDTO, Long userId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new BusinessException(ResultCode.POST_NOT_FOUND, "帖子不存在"));
         
@@ -273,8 +273,8 @@ public class PostServiceImpl implements PostService {
     /**
      * 转换为VO
      */
-    private PostVO convertToVO(Post post) {
-        PostVO vo = new PostVO();
+    private PostVo convertToVO(Post post) {
+        PostVo vo = new PostVo();
         vo.setId(post.getId());
         vo.setTitle(post.getTitle());
         vo.setContent(post.getContent());
@@ -297,8 +297,8 @@ public class PostServiceImpl implements PostService {
     /**
      * 转换为分页VO
      */
-    private PageVO<PostVO> convertToPageVO(Page<Post> page) {
-        List<PostVO> records = page.getContent().stream()
+    private PageVO<PostVo> convertToPageVO(Page<Post> page) {
+        List<PostVo> records = page.getContent().stream()
             .map(this::convertToVO)
             .collect(Collectors.toList());
         
@@ -307,7 +307,7 @@ public class PostServiceImpl implements PostService {
     }
     
     @Override
-    public PageVO<PostVO> getAllPostsForAdmin(Integer pageNum, Integer pageSize, Integer status) {
+    public PageVO<PostVo> getAllPostsForAdmin(Integer pageNum, Integer pageSize, Integer status) {
         // 设置默认值
         pageNum = (pageNum == null || pageNum < 1) ? CommonConstant.DEFAULT_PAGE_NUM : pageNum;
         pageSize = (pageSize == null || pageSize < 1) ? CommonConstant.DEFAULT_PAGE_SIZE : pageSize;
