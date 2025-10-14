@@ -75,3 +75,17 @@ export function deletePost(postId) {
   })
 }
 
+/**
+ * 搜索帖子（支持标题和内容模糊搜索）
+ */
+export function searchPosts(keyword, params) {
+  return request({
+    url: '/api/post/search',
+    method: 'get',
+    params: {
+      keyword,
+      ...params
+    }
+  })
+}
+

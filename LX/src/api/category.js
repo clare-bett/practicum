@@ -52,3 +52,13 @@ export function deleteCategory(categoryId) {
   })
 }
 
+/**
+ * 恢复已删除的板块（管理员）
+ */
+export function restoreCategory(categoryId) {
+  return request({
+    url: `/api/category/${categoryId}/restore`,
+    method: 'put'
+  })
+}
+

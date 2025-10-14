@@ -42,7 +42,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/category/list",    // 查看板块列表不需要登录
                         "/api/category/{categoryId}",  // 查看板块详情不需要登录
                         "/api/post/list",        // 查看帖子列表不需要登录
-                        "/api/post/{postId}",    // 查看帖子详情不需要登录
+                        "/api/post/search",      // 搜索帖子不需要登录
                         "/api/post/category/**", // 按板块查询帖子不需要登录
                         "/api/post/author/**",   // 按作者查询帖子不需要登录
                         "/api/reply/post/**",    // 查看回复不需要登录

@@ -585,8 +585,7 @@ const handleDeleteReply = (replyId) => {
 }
 
 const handleEdit = () => {
-  // TODO: 实现编辑功能
-  ElMessage.info('编辑功能待实现')
+  router.push(`/post/${postId.value}/edit`)
 }
 
 const handleDelete = () => {

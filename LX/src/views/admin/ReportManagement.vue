@@ -84,13 +84,6 @@
                 删除内容
               </el-button>
               <el-button 
-                type="warning" 
-                size="small"
-                @click="handleAction(row, 'ban')"
-              >
-                禁言用户
-              </el-button>
-              <el-button 
                 size="small"
                 @click="handleAction(row, 'reject')"
               >
@@ -248,7 +241,6 @@ const getStatusType = (status) => {
 const getActionTitle = () => {
   const map = {
     delete: '删除违规内容',
-    ban: '禁言用户',
     reject: '驳回举报'
   }
   return map[currentAction.value] || '处理举报'
@@ -269,7 +261,6 @@ const confirmHandle = async () => {
 
   const actionText = {
     delete: '删除内容',
-    ban: '禁言用户',
     reject: '驳回举报'
   }[currentAction.value]
 

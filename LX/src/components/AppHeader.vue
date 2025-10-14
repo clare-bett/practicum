@@ -26,6 +26,24 @@
         </nav>
       </div>
 
+      <!-- 搜索框 -->
+      <div class="header-center">
+        <el-input
+          v-model="searchKeyword"
+          placeholder="搜索帖子标题或内容..."
+          class="search-input"
+          clearable
+          @keyup.enter="handleSearch"
+        >
+          <template #prefix>
+            <el-icon><Search /></el-icon>
+          </template>
+          <template #append>
+            <el-button :icon="Search" @click="handleSearch">搜索</el-button>
+          </template>
+        </el-input>
+      </div>
+
       <div class="header-right">
         <el-button type="primary" @click="goToCreate" v-if="isLoggedIn">
           <el-icon><EditPen /></el-icon>
@@ -66,8 +84,8 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useCategoryStore } from '@/stores/category'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -77,10 +95,12 @@ import {
   EditPen,
   User,
   SwitchButton,
-  Setting
+  Setting,
+  Search
 } from '@element-plus/icons-vue'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 const categoryStore = useCategoryStore()
 
@@ -88,6 +108,8 @@ const isLoggedIn = computed(() => userStore.isLoggedIn)
 const userInfo = computed(() => userStore.userInfo)
 const categories = computed(() => categoryStore.categories)
 const isAdmin = computed(() => userStore.isAdmin)
+
+const searchKeyword = ref('')
 
 onMounted(() => {
   categoryStore.fetchCategories()
@@ -111,6 +133,20 @@ const goToCreate = () => {
 
 const goToAdmin = () => {
   router.push('/admin')
+}
+
+const handleSearch = () => {
+  const keyword = searchKeyword.value.trim()
+  if (!keyword) {
+    ElMessage.warning('请输入搜索关键词')
+    return
+  }
+  
+  // 跳转到首页并传递搜索关键词
+  router.push({
+    path: '/',
+    query: { keyword }
+  })
 }
 
 const handleLogout = () => {
@@ -140,8 +176,9 @@ const handleLogout = () => {
   margin: 0 auto;
   padding: 0 20px;
   height: 64px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
   align-items: center;
 }
 
@@ -149,6 +186,19 @@ const handleLogout = () => {
   display: flex;
   align-items: center;
   gap: 40px;
+}
+
+.header-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.search-input {
+  width: 100%;
 }
 
 .logo {
@@ -223,13 +273,40 @@ const handleLogout = () => {
   gap: 8px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 968px) {
   .header-container {
-    padding: 0 12px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    height: auto;
+    padding: 10px 16px;
+    gap: 10px;
+  }
+
+  .header-left {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .header-center {
+    grid-column: 1;
+    grid-row: 2;
+    max-width: 100%;
+  }
+
+  .header-right {
+    position: absolute;
+    right: 16px;
+    top: 12px;
   }
 
   .nav-menu {
     display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0 12px;
   }
 
   .logo-text {
@@ -237,6 +314,10 @@ const handleLogout = () => {
   }
 
   .username {
+    display: none;
+  }
+
+  .header-right .el-button span {
     display: none;
   }
 }

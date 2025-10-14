@@ -2,12 +2,15 @@ package com.gxa.cddx.www.forum.controller;
 
 import com.gxa.cddx.www.forum.annotation.RequireAuth;
 import com.gxa.cddx.www.forum.dto.PostDTO;
+import com.gxa.cddx.www.forum.dto.PostUpdateDTO;
 import com.gxa.cddx.www.forum.service.PostService;
 import com.gxa.cddx.www.forum.vo.PageVO;
 import com.gxa.cddx.www.forum.vo.PostVo;
 import com.gxa.cddx.www.forum.vo.Result;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/post")
+@Validated
 public class PostController {
     
     @Autowired
@@ -25,7 +29,7 @@ public class PostController {
      */
     @RequireAuth
     @PostMapping
-    public Result<PostVo> createPost(@RequestBody PostDTO postDTO, HttpServletRequest request) {
+    public Result<PostVo> createPost(@Valid @RequestBody PostDTO postDTO, HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         PostVo postVO = postService.createPost(postDTO, userId);
         return Result.success("发帖成功", postVO);
@@ -82,11 +86,11 @@ public class PostController {
     @PutMapping("/{postId}")
     public Result<PostVo> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostDTO postDTO,
+            @Valid @RequestBody PostUpdateDTO postUpdateDTO,
             HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        PostVo postVO = postService.updatePost(postId, postDTO, userId);
-        return Result.success("更新成功", postVO);
+        PostVo postVO = postService.updatePost(postId, postUpdateDTO, userId);
+        return Result.success("编辑成功", postVO);
     }
     
     /**
@@ -96,6 +100,9 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public Result<Void> deletePost(@PathVariable Long postId, HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
+            return Result.error("用户未登录，请重新登录");
+        }
         postService.deletePost(postId, userId);
         return Result.success("删除成功", null);
     }
@@ -131,6 +138,18 @@ public class PostController {
     public Result<Void> adminRestorePost(@PathVariable Long postId) {
         postService.adminRestorePost(postId);
         return Result.success("恢复成功", null);
+    }
+    
+    /**
+     * 搜索帖子（支持标题和内容模糊搜索）
+     */
+    @GetMapping("/search")
+    public Result<PageVO<PostVo>> searchPosts(
+            @RequestParam String keyword,
+            @RequestParam(required = false) Integer pageNum,
+            @RequestParam(required = false) Integer pageSize) {
+        PageVO<PostVo> pageVO = postService.searchPosts(keyword, pageNum, pageSize);
+        return Result.success(pageVO);
     }
 }
 

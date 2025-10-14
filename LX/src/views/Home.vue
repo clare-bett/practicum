@@ -38,17 +38,35 @@
           <template #header>
             <div class="card-header">
               <span class="header-title">
-                {{ selectedCategory ? getCategoryName(selectedCategory) : '最新帖子' }}
+                <template v-if="searchKeyword">
+                  搜索结果："{{ searchKeyword }}"
+                  <el-tag size="small" type="info" style="margin-left: 8px;">
+                    {{ total }} 个结果
+                  </el-tag>
+                </template>
+                <template v-else>
+                  {{ selectedCategory ? getCategoryName(selectedCategory) : '最新帖子' }}
+                </template>
               </span>
-              <el-button 
-                type="primary" 
-                size="small"
-                @click="goToCreate"
-                v-if="isLoggedIn"
-              >
-                <el-icon><EditPen /></el-icon>
-                发帖
-              </el-button>
+              <div class="header-actions">
+                <el-button 
+                  v-if="searchKeyword"
+                  size="small"
+                  @click="clearSearch"
+                >
+                  <el-icon><Close /></el-icon>
+                  清除搜索
+                </el-button>
+                <el-button 
+                  type="primary" 
+                  size="small"
+                  @click="goToCreate"
+                  v-if="isLoggedIn"
+                >
+                  <el-icon><EditPen /></el-icon>
+                  发帖
+                </el-button>
+              </div>
             </div>
           </template>
 
@@ -83,20 +101,22 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useCategoryStore } from '@/stores/category'
-import { getPostList, getPostListByCategory } from '@/api/post'
+import { getPostList, getPostListByCategory, searchPosts } from '@/api/post'
 import MainLayout from '@/components/MainLayout.vue'
 import PostCard from '@/components/PostCard.vue'
 import { ElMessage } from 'element-plus'
 import { 
   Notebook, 
   CollectionTag, 
-  EditPen 
+  EditPen,
+  Close
 } from '@element-plus/icons-vue'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 const categoryStore = useCategoryStore()
 
@@ -106,12 +126,25 @@ const categories = computed(() => categoryStore.categories)
 const loading = ref(false)
 const posts = ref([])
 const selectedCategory = ref(null)
+const searchKeyword = ref('')
 const pageNum = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
 
 onMounted(() => {
   categoryStore.fetchCategories()
+  // 检查URL中是否有搜索关键词
+  if (route.query.keyword) {
+    searchKeyword.value = route.query.keyword
+  }
+  fetchPosts()
+})
+
+// 监听路由变化
+watch(() => route.query.keyword, (newKeyword) => {
+  searchKeyword.value = newKeyword || ''
+  selectedCategory.value = null // 搜索时清除分类选择
+  pageNum.value = 1
   fetchPosts()
 })
 
@@ -124,7 +157,10 @@ const fetchPosts = async () => {
     }
 
     let res
-    if (selectedCategory.value) {
+    // 优先执行搜索
+    if (searchKeyword.value) {
+      res = await searchPosts(searchKeyword.value, params)
+    } else if (selectedCategory.value) {
       res = await getPostListByCategory(selectedCategory.value, params)
     } else {
       res = await getPostList(params)
@@ -144,7 +180,10 @@ const fetchPosts = async () => {
 
 const selectCategory = (categoryId) => {
   selectedCategory.value = categoryId
+  searchKeyword.value = '' // 清除搜索关键词
   pageNum.value = 1
+  // 清除URL中的搜索参数
+  router.replace({ path: '/', query: {} })
   fetchPosts()
 }
 
@@ -161,6 +200,13 @@ const handlePageChange = (page) => {
 
 const handleSizeChange = (size) => {
   pageSize.value = size
+  pageNum.value = 1
+  fetchPosts()
+}
+
+const clearSearch = () => {
+  searchKeyword.value = ''
+  router.replace({ path: '/', query: {} })
   pageNum.value = 1
   fetchPosts()
 }
@@ -192,6 +238,14 @@ const goToCreate = () => {
   font-size: 16px;
   font-weight: 600;
   color: #303133;
+  display: flex;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .category-list {

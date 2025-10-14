@@ -30,8 +30,13 @@ public interface CategoryService {
     Category updateCategory(Long categoryId, Category category);
     
     /**
-     * 删除板块
+     * 删除板块（软删除）
      */
     void deleteCategory(Long categoryId);
+    
+    /**
+     * 恢复已删除的板块
+     */
+    Category restoreCategory(Long categoryId);
 }
 

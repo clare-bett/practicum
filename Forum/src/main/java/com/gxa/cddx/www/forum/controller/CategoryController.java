@@ -66,5 +66,15 @@ public class CategoryController {
         categoryService.deleteCategory(categoryId);
         return Result.success("删除成功", null);
     }
+    
+    /**
+     * 恢复已删除的板块（管理员）
+     */
+    @RequireAuth(admin = true)
+    @PutMapping("/{categoryId}/restore")
+    public Result<Category> restoreCategory(@PathVariable Long categoryId) {
+        Category category = categoryService.restoreCategory(categoryId);
+        return Result.success("恢复成功", category);
+    }
 }
 

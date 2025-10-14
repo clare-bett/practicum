@@ -42,6 +42,12 @@ const router = createRouter({
       meta: { title: '发帖', requiresAuth: true }
     },
     {
+      path: '/post/:id/edit',
+      name: 'editPost',
+      component: () => import('@/views/EditPost.vue'),
+      meta: { title: '编辑帖子', requiresAuth: true }
+    },
+    {
       path: '/user/:id',
       name: 'userProfile',
       component: () => import('@/views/UserProfile.vue'),

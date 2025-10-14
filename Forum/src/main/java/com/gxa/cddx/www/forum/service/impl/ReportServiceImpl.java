@@ -71,7 +71,7 @@ public class ReportServiceImpl implements ReportService {
         
         reportRepository.save(report);
         
-        log.info("✅ 用户 {} 提交举报成功，类型: {}, 目标ID: {}", reporterId, reportType, targetId);
+        log.info(" 用户 {} 提交举报成功，类型: {}, 目标ID: {}", reporterId, reportType, targetId);
         return true;
     }
     
@@ -100,7 +100,7 @@ public class ReportServiceImpl implements ReportService {
                 if (post != null) {
                     post.setStatus(CommonConstant.POST_DELETED);
                     postRepository.save(post);
-                    log.info("📍 删除违规帖子: {}", report.getTargetId());
+                    log.info(" 删除违规帖子: {}", report.getTargetId());
                 }
             } else if (report.getReportType() == 2) {
                 // 删除回复
@@ -108,7 +108,7 @@ public class ReportServiceImpl implements ReportService {
                 if (reply != null) {
                     reply.setStatus(0);
                     replyRepository.save(reply);
-                    log.info("📍 删除违规回复: {}", report.getTargetId());
+                    log.info(" 删除违规回复: {}", report.getTargetId());
                 }
             }
             report.setStatus(1); // 已处理
@@ -145,7 +145,7 @@ public class ReportServiceImpl implements ReportService {
         
         reportRepository.save(report);
         
-        log.info("✅ 管理员 {} 处理举报 {} 成功，动作: {}", handlerId, reportId, action);
+        log.info(" 管理员 {} 处理举报 {} 成功，动作: {}", handlerId, reportId, action);
         return true;
     }
     

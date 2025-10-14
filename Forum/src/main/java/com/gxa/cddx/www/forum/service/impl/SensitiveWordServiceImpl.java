@@ -45,7 +45,7 @@ public class SensitiveWordServiceImpl implements SensitiveWordService {
         // 构建敏感词字典树
         buildSensitiveWordMap();
         
-        log.info("✅ 敏感词过滤服务初始化完成，共加载 {} 个敏感词", SENSITIVE_WORDS.size());
+        log.info("敏感词过滤服务初始化完成，共加载 {} 个敏感词", SENSITIVE_WORDS.size());
     }
     
     /**

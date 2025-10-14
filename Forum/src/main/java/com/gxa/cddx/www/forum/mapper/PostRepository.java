@@ -52,5 +52,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Transactional
     @Query("UPDATE Post p SET p.replyCount = p.replyCount + 1 WHERE p.id = ?1")
     void incrementReplyCount(Long postId);
+    
+    /**
+     * 根据标题或内容模糊搜索帖子（支持分页）
+     */
+    @Query("SELECT p FROM Post p WHERE p.status = ?3 AND (p.title LIKE %?1% OR p.content LIKE %?2%) ORDER BY p.isTop DESC, p.createTime DESC")
+    Page<Post> searchByTitleOrContent(String titleKeyword, String contentKeyword, Integer status, Pageable pageable);
 }
 

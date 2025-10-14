@@ -1,6 +1,7 @@
 package com.gxa.cddx.www.forum.service;
 
 import com.gxa.cddx.www.forum.dto.PostDTO;
+import com.gxa.cddx.www.forum.dto.PostUpdateDTO;
 import com.gxa.cddx.www.forum.vo.PageVO;
 import com.gxa.cddx.www.forum.vo.PostVo;
 
@@ -36,8 +37,12 @@ public interface PostService {
     
     /**
      * 更新帖子
+     * @param postId 帖子ID
+     * @param postUpdateDTO 更新数据
+     * @param userId 当前用户ID
+     * @return 更新后的帖子
      */
-    PostVo updatePost(Long postId, PostDTO postDTO, Long userId);
+    PostVo updatePost(Long postId, PostUpdateDTO postUpdateDTO, Long userId);
     
     /**
      * 删除帖子
@@ -63,5 +68,14 @@ public interface PostService {
      * 管理员恢复帖子
      */
     void adminRestorePost(Long postId);
+    
+    /**
+     * 根据关键词搜索帖子
+     * @param keyword 搜索关键词
+     * @param pageNum 页码
+     * @param pageSize 每页大小
+     * @return 帖子列表
+     */
+    PageVO<PostVo> searchPosts(String keyword, Integer pageNum, Integer pageSize);
 }
 
