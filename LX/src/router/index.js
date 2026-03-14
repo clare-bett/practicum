@@ -60,6 +60,12 @@ const router = createRouter({
       meta: { title: '个人中心', requiresAuth: true }
     },
     {
+      path: '/favorites',
+      name: 'myFavorites',
+      component: () => import('@/views/MyFavorites.vue'),
+      meta: { title: '我的收藏', requiresAuth: true }
+    },
+    {
       path: '/admin',
       name: 'admin',
       redirect: '/admin/posts',
@@ -89,6 +95,12 @@ const router = createRouter({
         name: 'adminReports',
         component: () => import('@/views/admin/ReportManagement.vue'),
         meta: { title: '举报管理', requiresAuth: true, requiresAdmin: true }
+      },
+      {
+        path: 'knowledge',
+        name: 'adminKnowledge',
+        component: () => import('@/views/admin/KnowledgeManagement.vue'),
+        meta: { title: '知识库管理', requiresAuth: true, requiresAdmin: true }
       }
     ]
     },

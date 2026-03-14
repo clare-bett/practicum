@@ -63,6 +63,9 @@
                 <el-dropdown-item @click="goToProfile">
                   <el-icon><User /></el-icon> 个人中心
                 </el-dropdown-item>
+                <el-dropdown-item @click="goToFavorites">
+                  <el-icon><Star /></el-icon> 我的收藏
+                </el-dropdown-item>
                 <el-dropdown-item v-if="isAdmin" @click="goToAdmin">
                   <el-icon><Setting /></el-icon> 管理后台
                 </el-dropdown-item>
@@ -96,7 +99,8 @@ import {
   User,
   SwitchButton,
   Setting,
-  Search
+  Search,
+  Star
 } from '@element-plus/icons-vue'
 
 const router = useRouter()
@@ -125,6 +129,10 @@ const goToRegister = () => {
 
 const goToProfile = () => {
   router.push('/profile')
+}
+
+const goToFavorites = () => {
+  router.push('/favorites')
 }
 
 const goToCreate = () => {

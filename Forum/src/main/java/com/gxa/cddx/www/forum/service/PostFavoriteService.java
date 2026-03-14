@@ -1,5 +1,8 @@
 package com.gxa.cddx.www.forum.service;
 
+import com.gxa.cddx.www.forum.vo.PageVO;
+import com.gxa.cddx.www.forum.vo.PostVo;
+
 /**
  * 帖子收藏服务接口
  */
@@ -28,5 +31,14 @@ public interface PostFavoriteService {
      * @return 是否已收藏
      */
     boolean hasFavorited(Long postId, Long userId);
+
+    /**
+     * 分页查询当前用户收藏的帖子列表
+     * @param userId 用户ID
+     * @param pageNum 页码
+     * @param pageSize 每页条数
+     * @return 分页结果（仅包含未删除的帖子）
+     */
+    PageVO<PostVo> getMyFavoritedPosts(Long userId, Integer pageNum, Integer pageSize);
 }
 

@@ -2,7 +2,7 @@
   <footer class="app-footer">
     <div class="footer-container">
       <div class="footer-content">
-        <p>&copy; 2025 灵犀论坛. All rights reserved.</p>
+        <p>&copy; 2026 灵犀论坛. All rights reserved.</p>
         <div class="footer-links">
           <a href="#" class="footer-link">关于我们</a>
           <span class="separator">|</span>

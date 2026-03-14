@@ -3,6 +3,8 @@ package com.gxa.cddx.www.forum.controller;
 import com.gxa.cddx.www.forum.annotation.RequireAuth;
 import com.gxa.cddx.www.forum.service.PostFavoriteService;
 import com.gxa.cddx.www.forum.service.PostLikeService;
+import com.gxa.cddx.www.forum.vo.PageVO;
+import com.gxa.cddx.www.forum.vo.PostVo;
 import com.gxa.cddx.www.forum.vo.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +100,19 @@ public class InteractionController {
     public Result<Boolean> checkFavorite(@PathVariable Long postId, @RequestAttribute("userId") Long userId) {
         boolean hasFavorited = postFavoriteService.hasFavorited(postId, userId);
         return Result.success(hasFavorited);
+    }
+
+    /**
+     * 分页获取当前用户收藏的帖子列表
+     */
+    @GetMapping("/favorites")
+    @RequireAuth
+    public Result<PageVO<PostVo>> getMyFavorites(
+            @RequestAttribute("userId") Long userId,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        PageVO<PostVo> page = postFavoriteService.getMyFavoritedPosts(userId, pageNum, pageSize);
+        return Result.success(page);
     }
 }
 

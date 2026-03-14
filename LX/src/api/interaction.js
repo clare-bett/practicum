@@ -64,3 +64,17 @@ export function checkFavoriteStatus(postId) {
   })
 }
 
+/**
+ * 分页获取当前用户收藏的帖子列表
+ */
+export function getMyFavorites(params = {}) {
+  return request({
+    url: '/api/interaction/favorites',
+    method: 'get',
+    params: {
+      pageNum: params.pageNum ?? 1,
+      pageSize: params.pageSize ?? 10
+    }
+  })
+}
+

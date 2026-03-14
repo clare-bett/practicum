@@ -28,6 +28,10 @@
             <el-icon><Warning /></el-icon>
             <span>举报管理</span>
           </el-menu-item>
+          <el-menu-item index="/admin/knowledge">
+            <el-icon><Reading /></el-icon>
+            <span>知识库管理</span>
+          </el-menu-item>
         </el-menu>
         
         <div class="admin-footer">
@@ -70,7 +74,8 @@ import {
   FolderOpened,
   User,
   Warning,
-  Back
+  Back,
+  Reading
 } from '@element-plus/icons-vue'
 
 const router = useRouter()

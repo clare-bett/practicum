@@ -27,5 +27,10 @@ public interface AIService {
      * 检查AI服务是否可用
      */
     boolean isEnabled();
+
+    /**
+     * 基于知识库 RAG 回答用户问题
+     */
+    String answerFromKnowledge(String question);
 }
 
